@@ -37,7 +37,7 @@ export default function ChallengePage({challenge}: ChallengePageProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const challenge = await firestore.collection('challenges').doc(context.params.id as string)
+    const challenge = await firestore.collection('challenges').doc(context.params!.id as string)
     .get()
     .then(doc => {
         if (!doc.exists) {
