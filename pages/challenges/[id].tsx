@@ -3,31 +3,53 @@ import { IChallenge } from '../../components/Challenge'
 import styles from '../../styles/Challenges.module.css'
 import { firestore, auth } from '../../config'
 import { GetServerSideProps } from 'next'
-import { ChangeEvent } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 
 interface ChallengePageProps {
     challenge: IChallenge;
 }
 
+interface ProgressMap {
+  [index: number]: boolean
+}
+
 export default function ChallengePage({challenge}: ChallengePageProps) {
   const [user, loading, error] = useAuthState(auth);
+  const [progress, setProgress] = useState<ProgressMap>({});
+  const [progressLoading, setProgressLoading] = useState(false);
 
   const updateGoalsProgress = async (e: ChangeEvent<HTMLInputElement>) => {
     if (user === null) {
       return;
     }
-    const progressRef = await firestore.collection('progress').doc(`${user!.uid}-${challenge.id}`)
+    const progressRef = firestore.collection('progress').doc(`${user!.uid}-${challenge.id}`);
     if (e.target.checked) {
       const checkedValue = {[e.target.value]: true};
+      setProgress({...progress, ...checkedValue});
       progressRef.update(checkedValue)
       .catch(() => progressRef.set(checkedValue));
     } else {
       const uncheckedValue = {[e.target.value]: false};
+      setProgress({...progress, ...uncheckedValue});
       progressRef.update(uncheckedValue)
       .catch(() => progressRef.set(uncheckedValue));
     }
   }
+
+  useEffect(() => {
+    if (user !== null) {
+      setProgressLoading(true);
+      firestore.collection('progress').doc(`${user!.uid}-${challenge.id}`)
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          setProgress(doc.data() as ProgressMap);
+          setProgressLoading(false);
+        }
+      });
+    }
+  }, [user]);
 
   return (
     <div className={styles.container}>
@@ -44,9 +66,10 @@ export default function ChallengePage({challenge}: ChallengePageProps) {
         <p>{challenge.description}</p>
 
         <h2>Goals</h2>
+        {progressLoading && <p>Loading goals progress...</p>}
         {challenge.goals.map((goal, i) => (
         <div className={styles.checkboxContainer} key={goal}>
-            <input value={i} onChange={updateGoalsProgress} className={styles.checkbox} type="checkbox" id={`goal-${i}`} />
+            <input value={i} checked={progress[i] ? progress[i] : false} onChange={updateGoalsProgress} className={styles.checkbox} type="checkbox" id={`goal-${i}`} />
             <label htmlFor={`goal-${i}`}>{goal}</label>
         </div>
         ))}
