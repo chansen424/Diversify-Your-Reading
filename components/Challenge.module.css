@@ -1,0 +1,26 @@
+.container {
+    margin: 10px 0px;
+}
+
+.title {
+    font-size: 24px;
+    margin: 10px 0px;
+}
+
+.description {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #787878;
+    margin-bottom: 14px;
+}
+
+.link {
+    display: block;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 16px 14px;
+    background-color: #F0DDCE;
+    border-radius: 9px;
+    width: fit-content;
+}
