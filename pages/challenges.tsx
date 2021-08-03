@@ -1,8 +1,13 @@
 import Head from 'next/head'
-import Challenge from '../components/Challenge'
+import Challenge, { IChallenge } from '../components/Challenge'
 import styles from '../styles/Challenges.module.css'
+import { firestore } from '../config'
 
-export default function Challenges() {
+interface ChallengesProps {
+    challenges: IChallenge[];
+}
+
+export default function Challenges({challenges}: ChallengesProps) {
   return (
     <div className={styles.container}>
       <Head>
@@ -16,11 +21,24 @@ export default function Challenges() {
           Challenges
         </h1>
 
-        <Challenge title="Tony Morrison" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. At senectus aliquet pretium nulla tincidunt. Aliquam ac donec pulvinar faucibus." />
-        <Challenge title="Dystopians" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. At senectus aliquet pretium nulla tincidunt. Aliquam ac donec pulvinar faucibus." />
-        <Challenge title="Morality in Literature" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. At senectus aliquet pretium nulla tincidunt. Aliquam ac donec pulvinar faucibus." />
+        {challenges.map(challenge => <Challenge key={challenge.id} {...challenge} />)}
       </main>
 
     </div>
   )
 }
+
+export async function getServerSideProps(context: any) {
+    let challenges: IChallenge[] = [];
+    const querySnapshot = await firestore.collection('challenges').get();
+    querySnapshot.forEach(doc => {
+        challenges.push({id: doc.id, ...doc.data()} as IChallenge);
+    });
+
+    return {
+      props: {
+          challenges
+      },
+    }
+  }
+  

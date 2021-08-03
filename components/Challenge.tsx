@@ -1,12 +1,14 @@
 import Link from 'next/link'
 import styles from './Challenge.module.css'
 
-interface ChallengeProps {
+export interface IChallenge {
+    id: string;
     title: string;
     description: string;
+    goals: string[];
 }
 
-export default function Challenge({title, description}: ChallengeProps) {
+export default function Challenge({title, description}: IChallenge) {
   return (
     <div className={styles.container}>
         <h2 className={styles.title}>
