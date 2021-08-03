@@ -1,14 +1,34 @@
 import Head from 'next/head'
-import Challenge, { IChallenge } from '../../components/Challenge'
+import { IChallenge } from '../../components/Challenge'
 import styles from '../../styles/Challenges.module.css'
-import { firestore } from '../../config'
+import { firestore, auth } from '../../config'
 import { GetServerSideProps } from 'next'
+import { ChangeEvent } from 'react'
+import { useAuthState } from 'react-firebase-hooks/auth'
 
 interface ChallengePageProps {
     challenge: IChallenge;
 }
 
 export default function ChallengePage({challenge}: ChallengePageProps) {
+  const [user, loading, error] = useAuthState(auth);
+
+  const updateGoalsProgress = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (user === null) {
+      return;
+    }
+    const progressRef = await firestore.collection('progress').doc(`${user!.uid}-${challenge.id}`)
+    if (e.target.checked) {
+      const checkedValue = {[e.target.value]: true};
+      progressRef.update(checkedValue)
+      .catch(() => progressRef.set(checkedValue));
+    } else {
+      const uncheckedValue = {[e.target.value]: false};
+      progressRef.update(uncheckedValue)
+      .catch(() => progressRef.set(uncheckedValue));
+    }
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -26,7 +46,7 @@ export default function ChallengePage({challenge}: ChallengePageProps) {
         <h2>Goals</h2>
         {challenge.goals.map((goal, i) => (
         <div className={styles.checkboxContainer} key={goal}>
-            <input className={styles.checkbox} type="checkbox" id={`goal-${i}`} />
+            <input value={i} onChange={updateGoalsProgress} className={styles.checkbox} type="checkbox" id={`goal-${i}`} />
             <label htmlFor={`goal-${i}`}>{goal}</label>
         </div>
         ))}
