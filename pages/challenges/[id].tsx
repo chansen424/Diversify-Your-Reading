@@ -21,7 +21,7 @@ export default function ChallengePage({challenge}: ChallengePageProps) {
         <h1 className={styles.title}>
           {challenge.title}
         </h1>
-        <p  className={styles.description}>{challenge.description}</p>
+        <p>{challenge.description}</p>
 
         <h2>Goals</h2>
         {challenge.goals.map((goal, i) => (

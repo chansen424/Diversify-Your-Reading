@@ -1,14 +1,27 @@
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import Challenge, { IChallenge } from '../../components/Challenge'
 import styles from '../../styles/Challenges.module.css'
-import { firestore } from '../../config'
+import { firestore, auth, logout } from '../../config'
 import { GetServerSideProps } from 'next'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { useEffect } from 'react'
 
 interface ChallengesProps {
     challenges: IChallenge[];
 }
 
 export default function Challenges({challenges}: ChallengesProps) {
+  const [user, loading, error] = useAuthState(auth);
+  const router = useRouter();
+
+  useEffect(() => {
+    // Documentation said user === undefined if logged out, but apparently not
+    if (!loading && user === null) {
+      router.push('/');
+    }
+  }, [user, loading]);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -18,9 +31,9 @@ export default function Challenges({challenges}: ChallengesProps) {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Challenges
-        </h1>
+        <h1 className={styles.title}>Challenges</h1>
+        <p>Logged in as {user?.displayName}</p>
+        <button className={styles.logoutBtn} onClick={() => logout(() => router.push('/'))}>Logout</button>
 
         {challenges.map(challenge => <Challenge key={challenge.id} {...challenge} />)}
       </main>

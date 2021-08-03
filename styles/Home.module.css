@@ -22,19 +22,13 @@
   text-transform: uppercase;
 }
 
-.description {
-  line-height: 1.6;
-  font-size: 14px;
-  font-weight: 300;
-  color: #787878;
-}
-
-.link {
+.loginBtn, .getStarted {
   text-transform: uppercase;
   font-weight: bold;
   font-size: 14px;
   padding: 16px 14px;
   background-color: #F0DDCE;
   border-radius: 9px;
+  border: none;
   width: fit-content;
 }

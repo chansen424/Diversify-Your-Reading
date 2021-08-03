@@ -1,8 +1,14 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { auth, login } from '../config'
+import { useAuthState } from 'react-firebase-hooks/auth'
 import styles from '../styles/Home.module.css'
 
 export default function Home() {
+  const router = useRouter();
+  const [user, loading, error] = useAuthState(auth);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -16,11 +22,12 @@ export default function Home() {
           Diversify Your Reading
         </h1>
 
-        <p className={styles.description}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. A arcu cursus vitae congue mauris rhoncus aenean. Senectus et netus et malesuada fames ac. Etiam tempor orci eu lobortis elementum nibh tellus molestie nunc.
+        <p>
+          Diversify your reading with fun challenges. You might learn something new.
         </p>
-
-        <Link href="/challenges"><a className={styles.link}>Get Started</a></Link>
+        { user ? <Link href="/challenges"><a className={styles.getStarted}>Get Started</a></Link> 
+          : <button className={styles.loginBtn} onClick={() => login(() => { router.push('/challenges') })}>Sign In With Google</button> 
+        }
       </main>
 
     </div>

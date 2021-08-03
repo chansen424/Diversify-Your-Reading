@@ -10,6 +10,13 @@ a {
   text-decoration: none;
 }
 
+p {
+  line-height: 1.6;
+  font-size: 14px;
+  font-weight: 300;
+  color: #787878;
+}
+
 * {
   box-sizing: border-box;
 }

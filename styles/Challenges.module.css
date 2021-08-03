@@ -1,3 +1,14 @@
+.logoutBtn {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 16px 14px;
+  background-color: #F0DDCE;
+  border-radius: 9px;
+  border: none;
+  width: fit-content;
+}
+
 .container {
   min-height: 100vh;
   padding: 0 1rem;
@@ -16,14 +27,6 @@
   margin: 0;
   line-height: 1.15;
   font-size: 36px;
-}
-
-.description {
-  font-size: 18px;
-  line-height: 1.6;
-  color: #787878;
-  margin-bottom: 14px;
-  font-weight: 300;
 }
 
 .checkboxContainer {
