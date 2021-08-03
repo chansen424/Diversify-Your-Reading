@@ -1,7 +1,8 @@
 import Head from 'next/head'
-import Challenge, { IChallenge } from '../components/Challenge'
-import styles from '../styles/Challenges.module.css'
-import { firestore } from '../config'
+import Challenge, { IChallenge } from '../../components/Challenge'
+import styles from '../../styles/Challenges.module.css'
+import { firestore } from '../../config'
+import { GetServerSideProps } from 'next'
 
 interface ChallengesProps {
     challenges: IChallenge[];
@@ -28,7 +29,7 @@ export default function Challenges({challenges}: ChallengesProps) {
   )
 }
 
-export async function getServerSideProps(context: any) {
+export const getServerSideProps: GetServerSideProps = async (context) => {
     let challenges: IChallenge[] = [];
     const querySnapshot = await firestore.collection('challenges').get();
     querySnapshot.forEach(doc => {
