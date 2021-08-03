@@ -44,7 +44,7 @@ export default function Challenges({challenges}: ChallengesProps) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     let challenges: IChallenge[] = [];
-    const querySnapshot = await firestore.collection('challenges').get();
+    const querySnapshot = await firestore.collection('challenges').limit(25).get();
     querySnapshot.forEach(doc => {
         challenges.push({id: doc.id, ...doc.data()} as IChallenge);
     });
