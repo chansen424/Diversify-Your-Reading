@@ -17,10 +17,10 @@ export default function Challenges({challenges}: ChallengesProps) {
 
   useEffect(() => {
     // Documentation said user === undefined if logged out, but apparently not
-    if (!loading && user === null) {
+    if (!loading && user === null && router) {
       router.push('/');
     }
-  }, [user, loading]);
+  }, [user, loading, router]);
 
   return (
     <div className={styles.container}>

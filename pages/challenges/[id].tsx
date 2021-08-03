@@ -49,7 +49,7 @@ export default function ChallengePage({challenge}: ChallengePageProps) {
         }
       });
     }
-  }, [user]);
+  }, [user, challenge.id]);
 
   return (
     <div className={styles.container}>
