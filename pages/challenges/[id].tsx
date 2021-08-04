@@ -16,6 +16,7 @@ interface ProgressMap {
 
 export default function ChallengePage({ challenge }: ChallengePageProps) {
   const [user, loading, error] = useAuthState(auth);
+  const [complete, setComplete] = useState(false);
   const [progress, setProgress] = useState<ProgressMap>({});
   const [progressLoading, setProgressLoading] = useState(false);
 
@@ -41,6 +42,17 @@ export default function ChallengePage({ challenge }: ChallengePageProps) {
     }
   };
 
+  const reset = () => {
+    if (user === null) {
+      return;
+    }
+    setProgress({});
+    firestore
+      .collection("progress")
+      .doc(`${user!.uid}-${challenge.id}`)
+      .set({});
+  };
+
   useEffect(() => {
     if (user !== null) {
       setProgressLoading(true);
@@ -57,6 +69,16 @@ export default function ChallengePage({ challenge }: ChallengePageProps) {
     }
   }, [user, challenge.id]);
 
+  useEffect(() => {
+    let isComplete = true;
+    challenge.goals.forEach((_, i) => {
+      if (progress[i] !== true) {
+        isComplete = false;
+      }
+    });
+    setComplete(isComplete);
+  }, [progress, challenge.goals]);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -71,6 +93,11 @@ export default function ChallengePage({ challenge }: ChallengePageProps) {
 
         <h2>Goals</h2>
         {progressLoading && <p>Loading goals progress...</p>}
+        {complete && (
+          <div className={styles.complete}>
+            <p>Congratulations! You completed this challenge.</p>
+          </div>
+        )}
         {challenge.goals.map((goal, i) => (
           <div className={styles.checkboxContainer} key={goal}>
             <input
@@ -84,6 +111,9 @@ export default function ChallengePage({ challenge }: ChallengePageProps) {
             <label htmlFor={`goal-${i}`}>{goal}</label>
           </div>
         ))}
+        <button onClick={(e) => reset()} className={styles.reset}>
+          Reset
+        </button>
       </main>
     </div>
   );

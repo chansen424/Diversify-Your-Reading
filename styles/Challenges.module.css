@@ -37,3 +37,29 @@
   margin-left: 10px;
   font-weight: 300;
 }
+
+.complete {
+  padding: 10px 20px;
+  background-color: #d4edda;
+  border: 1px solid #155724;
+  border-radius: 9px;
+  margin-bottom: 20px;
+  width: fit-content;
+}
+
+.complete > p {
+  margin: 0;
+  color: #155724;
+  font-weight: bold;
+}
+
+.reset {
+  padding: 10px 20px;
+  width: fit-content;
+  font-weight: bold;
+  border: none;
+  border-radius: 9px;
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #721c24;
+}
