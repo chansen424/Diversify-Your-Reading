@@ -1,19 +1,19 @@
 .container {
-    margin: 10px 0px;
+  margin: 10px 0px;
 }
 
 .title {
-    font-size: 24px;
-    margin: 10px 0px;
+  font-size: 24px;
+  margin: 10px 0px;
 }
 
 .link {
-    display: block;
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: 14px;
-    padding: 16px 14px;
-    background-color: #F0DDCE;
-    border-radius: 9px;
-    width: fit-content;
+  display: block;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 16px 14px;
+  background-color: #f0ddce;
+  border-radius: 9px;
+  width: fit-content;
 }

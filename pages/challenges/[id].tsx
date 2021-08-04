@@ -1,20 +1,20 @@
-import Head from 'next/head'
-import { IChallenge } from '../../components/Challenge'
-import styles from '../../styles/Challenges.module.css'
-import { firestore, auth } from '../../config'
-import { GetServerSideProps } from 'next'
-import { ChangeEvent, useEffect, useState } from 'react'
-import { useAuthState } from 'react-firebase-hooks/auth'
+import Head from "next/head";
+import { IChallenge } from "../../components/Challenge";
+import styles from "../../styles/Challenges.module.css";
+import { firestore, auth } from "../../config";
+import { GetServerSideProps } from "next";
+import { ChangeEvent, useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 interface ChallengePageProps {
-    challenge: IChallenge;
+  challenge: IChallenge;
 }
 
 interface ProgressMap {
-  [index: number]: boolean
+  [index: number]: boolean;
 }
 
-export default function ChallengePage({challenge}: ChallengePageProps) {
+export default function ChallengePage({ challenge }: ChallengePageProps) {
   const [user, loading, error] = useAuthState(auth);
   const [progress, setProgress] = useState<ProgressMap>({});
   const [progressLoading, setProgressLoading] = useState(false);
@@ -23,31 +23,37 @@ export default function ChallengePage({challenge}: ChallengePageProps) {
     if (user === null) {
       return;
     }
-    const progressRef = firestore.collection('progress').doc(`${user!.uid}-${challenge.id}`);
+    const progressRef = firestore
+      .collection("progress")
+      .doc(`${user!.uid}-${challenge.id}`);
     if (e.target.checked) {
-      const checkedValue = {[e.target.value]: true};
-      setProgress({...progress, ...checkedValue});
-      progressRef.update(checkedValue)
-      .catch(() => progressRef.set(checkedValue));
+      const checkedValue = { [e.target.value]: true };
+      setProgress({ ...progress, ...checkedValue });
+      progressRef
+        .update(checkedValue)
+        .catch(() => progressRef.set(checkedValue));
     } else {
-      const uncheckedValue = {[e.target.value]: false};
-      setProgress({...progress, ...uncheckedValue});
-      progressRef.update(uncheckedValue)
-      .catch(() => progressRef.set(uncheckedValue));
+      const uncheckedValue = { [e.target.value]: false };
+      setProgress({ ...progress, ...uncheckedValue });
+      progressRef
+        .update(uncheckedValue)
+        .catch(() => progressRef.set(uncheckedValue));
     }
-  }
+  };
 
   useEffect(() => {
     if (user !== null) {
       setProgressLoading(true);
-      firestore.collection('progress').doc(`${user!.uid}-${challenge.id}`)
-      .get()
-      .then(doc => {
-        if (doc.exists) {
-          setProgress(doc.data() as ProgressMap);
-          setProgressLoading(false);
-        }
-      });
+      firestore
+        .collection("progress")
+        .doc(`${user!.uid}-${challenge.id}`)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            setProgress(doc.data() as ProgressMap);
+            setProgressLoading(false);
+          }
+        });
     }
   }, [user, challenge.id]);
 
@@ -60,46 +66,51 @@ export default function ChallengePage({challenge}: ChallengePageProps) {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          {challenge.title}
-        </h1>
+        <h1 className={styles.title}>{challenge.title}</h1>
         <p>{challenge.description}</p>
 
         <h2>Goals</h2>
         {progressLoading && <p>Loading goals progress...</p>}
         {challenge.goals.map((goal, i) => (
-        <div className={styles.checkboxContainer} key={goal}>
-            <input value={i} checked={progress[i] ? progress[i] : false} onChange={updateGoalsProgress} className={styles.checkbox} type="checkbox" id={`goal-${i}`} />
+          <div className={styles.checkboxContainer} key={goal}>
+            <input
+              value={i}
+              checked={progress[i] ? progress[i] : false}
+              onChange={updateGoalsProgress}
+              className={styles.checkbox}
+              type="checkbox"
+              id={`goal-${i}`}
+            />
             <label htmlFor={`goal-${i}`}>{goal}</label>
-        </div>
+          </div>
         ))}
       </main>
-
     </div>
-  )
+  );
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const challenge = await firestore.collection('challenges').doc(context.params!.id as string)
+  const challenge = await firestore
+    .collection("challenges")
+    .doc(context.params!.id as string)
     .get()
-    .then(doc => {
-        if (!doc.exists) {
-            return undefined;
-        } else {
-            return {id: doc.id, ...doc.data()} as IChallenge;
-        }
+    .then((doc) => {
+      if (!doc.exists) {
+        return undefined;
+      } else {
+        return { id: doc.id, ...doc.data() } as IChallenge;
+      }
     });
 
-    if (challenge === undefined) {
-        return {
-            notFound: true,
-        }
-    }
-
+  if (challenge === undefined) {
     return {
-      props: {
-          challenge
-      },
-    }
+      notFound: true,
+    };
   }
-  
+
+  return {
+    props: {
+      challenge,
+    },
+  };
+};

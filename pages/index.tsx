@@ -1,9 +1,9 @@
-import Head from 'next/head'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { auth, login } from '../config'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { auth, login } from "../config";
+import { useAuthState } from "react-firebase-hooks/auth";
+import styles from "../styles/Home.module.css";
 
 export default function Home() {
   const router = useRouter();
@@ -18,18 +18,29 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Diversify Your Reading
-        </h1>
+        <h1 className={styles.title}>Diversify Your Reading</h1>
 
         <p>
-          Diversify your reading with fun challenges. You might learn something new.
+          Diversify your reading with fun challenges. You might learn something
+          new.
         </p>
-        { user ? <Link href="/challenges"><a className={styles.getStarted}>Get Started</a></Link> 
-          : <button className={styles.loginBtn} onClick={() => login(() => { router.push('/challenges') })}>Sign In With Google</button> 
-        }
+        {user ? (
+          <Link href="/challenges">
+            <a className={styles.getStarted}>Get Started</a>
+          </Link>
+        ) : (
+          <button
+            className={styles.loginBtn}
+            onClick={() =>
+              login(() => {
+                router.push("/challenges");
+              })
+            }
+          >
+            Sign In With Google
+          </button>
+        )}
       </main>
-
     </div>
-  )
+  );
 }

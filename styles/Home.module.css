@@ -22,12 +22,13 @@
   text-transform: uppercase;
 }
 
-.loginBtn, .getStarted {
+.loginBtn,
+.getStarted {
   text-transform: uppercase;
   font-weight: bold;
   font-size: 14px;
   padding: 16px 14px;
-  background-color: #F0DDCE;
+  background-color: #f0ddce;
   border-radius: 9px;
   border: none;
   width: fit-content;

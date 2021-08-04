@@ -3,7 +3,7 @@
   font-weight: bold;
   font-size: 14px;
   padding: 16px 14px;
-  background-color: #F0DDCE;
+  background-color: #f0ddce;
   border-radius: 9px;
   border: none;
   width: fit-content;
@@ -15,14 +15,14 @@
   display: flex;
   flex-direction: column;
 }
-  
+
 .main {
   padding: 2rem 0;
   flex: 1;
   display: flex;
   flex-direction: column;
 }
-  
+
 .title {
   margin: 0;
   line-height: 1.15;

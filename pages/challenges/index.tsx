@@ -1,24 +1,24 @@
-import Head from 'next/head'
-import { useRouter } from 'next/router'
-import Challenge, { IChallenge } from '../../components/Challenge'
-import styles from '../../styles/Challenges.module.css'
-import { firestore, auth, logout } from '../../config'
-import { GetServerSideProps } from 'next'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import { useEffect } from 'react'
+import Head from "next/head";
+import { useRouter } from "next/router";
+import Challenge, { IChallenge } from "../../components/Challenge";
+import styles from "../../styles/Challenges.module.css";
+import { firestore, auth, logout } from "../../config";
+import { GetServerSideProps } from "next";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useEffect } from "react";
 
 interface ChallengesProps {
-    challenges: IChallenge[];
+  challenges: IChallenge[];
 }
 
-export default function Challenges({challenges}: ChallengesProps) {
+export default function Challenges({ challenges }: ChallengesProps) {
   const [user, loading, error] = useAuthState(auth);
   const router = useRouter();
 
   useEffect(() => {
     // Documentation said user === undefined if logged out, but apparently not
     if (!loading && user === null && router) {
-      router.push('/');
+      router.push("/");
     }
   }, [user, loading, router]);
 
@@ -33,26 +33,34 @@ export default function Challenges({challenges}: ChallengesProps) {
       <main className={styles.main}>
         <h1 className={styles.title}>Challenges</h1>
         <p>Logged in as {user?.displayName}</p>
-        <button className={styles.logoutBtn} onClick={() => logout(() => router.push('/'))}>Logout</button>
+        <button
+          className={styles.logoutBtn}
+          onClick={() => logout(() => router.push("/"))}
+        >
+          Logout
+        </button>
 
-        {challenges.map(challenge => <Challenge key={challenge.id} {...challenge} />)}
+        {challenges.map((challenge) => (
+          <Challenge key={challenge.id} {...challenge} />
+        ))}
       </main>
-
     </div>
-  )
+  );
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    let challenges: IChallenge[] = [];
-    const querySnapshot = await firestore.collection('challenges').limit(25).get();
-    querySnapshot.forEach(doc => {
-        challenges.push({id: doc.id, ...doc.data()} as IChallenge);
-    });
+  let challenges: IChallenge[] = [];
+  const querySnapshot = await firestore
+    .collection("challenges")
+    .limit(25)
+    .get();
+  querySnapshot.forEach((doc) => {
+    challenges.push({ id: doc.id, ...doc.data() } as IChallenge);
+  });
 
-    return {
-      props: {
-          challenges
-      },
-    }
-  }
-  
+  return {
+    props: {
+      challenges,
+    },
+  };
+};
