@@ -63,8 +63,8 @@ export default function ChallengePage({ challenge }: ChallengePageProps) {
         .then((doc) => {
           if (doc.exists) {
             setProgress(doc.data() as ProgressMap);
-            setProgressLoading(false);
           }
+          setProgressLoading(false);
         });
     }
   }, [user, challenge.id]);
