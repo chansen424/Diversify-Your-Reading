@@ -1,4 +1,4 @@
-.logoutBtn {
+.basicBtn {
   text-transform: uppercase;
   font-weight: bold;
   font-size: 14px;
@@ -7,6 +7,10 @@
   border-radius: 9px;
   border: none;
   width: fit-content;
+}
+
+.basicBtn + .basicBtn {
+  margin-left: 10px;
 }
 
 .container {
@@ -62,4 +66,18 @@
   background-color: #f8d7da;
   color: #721c24;
   border: 1px solid #721c24;
+}
+
+.addGoalsBtn {
+  padding: 10px 20px;
+  width: fit-content;
+  font-weight: bold;
+  border: none;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+}
+
+.addGoalsBtn > span {
+  margin-left: 10px;
 }

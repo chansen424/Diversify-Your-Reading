@@ -27,7 +27,12 @@
   background-color: #fff;
   padding: 10px 0px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.topBar > h2 {
+  margin: 0;
 }
 
 .closeBtn {
@@ -38,6 +43,7 @@
   padding: 10px 20px;
   display: flex;
   align-items: center;
+  margin-left: auto;
 }
 
 .closeBtn > span {

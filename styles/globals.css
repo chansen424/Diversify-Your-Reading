@@ -17,6 +17,17 @@ p {
   color: #787878;
 }
 
+label {
+  font-weight: 300;
+}
+
+input {
+  border-radius: 9px;
+  padding: 10px 20px;
+  display: block;
+  margin: 10px 0;
+}
+
 * {
   box-sizing: border-box;
 }
