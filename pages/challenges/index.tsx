@@ -165,7 +165,10 @@ export default function Challenges({ challenges }: ChallengesProps) {
         ))}
 
         {loadedChallenges.length === CHALLENGES_PER_PAGE && (
-          <button onClick={(e) => fetchMoreChallenges(lastDoc)}>
+          <button
+            className={styles.basicBtn}
+            onClick={(e) => fetchMoreChallenges(lastDoc)}
+          >
             More Challenges...
           </button>
         )}
