@@ -2,6 +2,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import Challenge, { IChallenge } from "../../components/Challenge";
 import styles from "../../styles/Challenges.module.css";
+import firebase from "firebase/app";
 import { firestore, auth, logout } from "../../config";
 import { GetServerSideProps } from "next";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -13,9 +14,13 @@ interface ChallengesProps {
   challenges: IChallenge[];
 }
 
+const CHALLENGES_PER_PAGE = 2;
+
 export default function Challenges({ challenges }: ChallengesProps) {
   const [user, loading, error] = useAuthState(auth);
   const router = useRouter();
+  const [loadedChallenges, setLoadedChallenges] = useState(challenges);
+  const [lastDoc, setLastDoc] = useState(challenges[challenges.length - 1].id);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [createTitle, setCreateTitle] = useState("");
@@ -39,6 +44,21 @@ export default function Challenges({ challenges }: ChallengesProps) {
     setCreateTitle("");
     setCreateDescription("");
     setGoalValues({});
+  };
+
+  const fetchMoreChallenges = async (lastDocId: string) => {
+    const querySnapshot = await firestore
+      .collection("challenges")
+      .orderBy(firebase.firestore.FieldPath.documentId())
+      .startAfter(lastDocId)
+      .limit(CHALLENGES_PER_PAGE)
+      .get();
+    setLoadedChallenges(
+      querySnapshot.docs.map((doc) => {
+        return { id: doc.id, ...doc.data() } as IChallenge;
+      })
+    );
+    setLastDoc(querySnapshot.docs[querySnapshot.docs.length - 1].id);
   };
 
   return (
@@ -140,9 +160,18 @@ export default function Challenges({ challenges }: ChallengesProps) {
           </button>
         </span>
 
-        {challenges.map((challenge) => (
+        {loadedChallenges.map((challenge) => (
           <Challenge key={challenge.id} {...challenge} />
         ))}
+
+        {loadedChallenges.length === CHALLENGES_PER_PAGE && (
+          <button
+            className={styles.basicBtn}
+            onClick={(e) => fetchMoreChallenges(lastDoc)}
+          >
+            More Challenges...
+          </button>
+        )}
       </main>
     </div>
   );
@@ -152,7 +181,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   let challenges: IChallenge[] = [];
   const querySnapshot = await firestore
     .collection("challenges")
-    .limit(25)
+    .orderBy(firebase.firestore.FieldPath.documentId())
+    .limit(CHALLENGES_PER_PAGE)
     .get();
   querySnapshot.forEach((doc) => {
     challenges.push({ id: doc.id, ...doc.data() } as IChallenge);
