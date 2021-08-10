@@ -14,7 +14,7 @@ interface ChallengesProps {
   challenges: IChallenge[];
 }
 
-const CHALLENGES_PER_PAGE = 2;
+const CHALLENGES_PER_PAGE = 5;
 
 export default function Challenges({ challenges }: ChallengesProps) {
   const [user, loading, error] = useAuthState(auth);
