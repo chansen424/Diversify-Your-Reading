@@ -34,12 +34,13 @@
 }
 
 .checkboxContainer {
+  display: flex;
+  align-items: center;
   margin-bottom: 18px;
 }
 
 .checkbox + label {
   margin-left: 10px;
-  font-weight: 300;
 }
 
 .complete {
